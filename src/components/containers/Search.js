@@ -1,5 +1,6 @@
 import React from 'react';
 import { Map } from '../presentation';
+import { connect } from 'react-redux';
 
 class Search extends React.Component {
     constructor(props) {
@@ -8,11 +9,11 @@ class Search extends React.Component {
             map: null
         }
     }
+    centerChanged(center){
+        console.log('Map Moved:', JSON.stringify(center));
+    }
     render(){
-        const markers = [
-            {id: 1, key: '1',  defaultAnimation: 2,  label: 'Shashank Gupta',  position:{lat: 40.7224017, lng: -73.9896719}},
-            {id: 2, key: '2',  defaultAnimation: 2,  label: 'John Samonte',  position:{lat: 40.7124017, lng: -73.9896719}},
-        ]
+        const items = this.props.item.all || []
         return(
             <div className="sidebar-wrapper" style={{height: 960}}>
                 <Map  onMapReady={ (map) => {
@@ -23,7 +24,8 @@ class Search extends React.Component {
                             map: map
                         })
                     }}
-                    markers={markers}
+                    locationChanged = {this.centerChanged.bind(this)}
+                    markers={items}
                     zoom={14}
                     center={{lat: 40.7224017, lng: -73.9896719}}
                     containerElement={<div style={{height:100+ '%'}}/>}
@@ -33,4 +35,9 @@ class Search extends React.Component {
         );
     }
 }
-export default Search;
+const stateToProps=(state)=>{
+    return {
+        item: state.item
+    }
+}
+export default connect(stateToProps)(Search);
